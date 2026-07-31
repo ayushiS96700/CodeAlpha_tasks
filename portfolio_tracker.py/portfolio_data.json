@@ -1,1 +1,56 @@
-
+[
+    {
+        "stock": "AAPL",
+        "quantity": 5,
+        "buy_price": 170.0,
+        "current_price": 180,
+        "total_invested": 850.0,
+        "current_value": 900,
+        "profit_loss": 50.0
+    },
+    {
+        "stock": "AAPL",
+        "quantity": 5,
+        "buy_price": 157.0,
+        "current_price": 180,
+        "total_invested": 785.0,
+        "current_value": 900,
+        "profit_loss": 115.0
+    },
+    {
+        "stock": "TSLA",
+        "quantity": 250,
+        "buy_price": 300.0,
+        "current_price": 250,
+        "total_invested": 75000.0,
+        "current_value": 62500,
+        "profit_loss": -12500.0
+    },
+    {
+        "stock": "AAPL",
+        "quantity": 180,
+        "buy_price": 180.0,
+        "current_price": 180,
+        "total_invested": 32400.0,
+        "current_value": 32400,
+        "profit_loss": 0.0
+    },
+    {
+        "stock": "AAPL",
+        "quantity": 5,
+        "buy_price": 180.0,
+        "current_price": 180,
+        "total_invested": 900.0,
+        "current_value": 900,
+        "profit_loss": 0.0
+    },
+    {
+        "stock": "AAPL",
+        "quantity": 5,
+        "buy_price": 170.0,
+        "current_price": 180,
+        "total_invested": 850.0,
+        "current_value": 900,
+        "profit_loss": 50.0
+    }
+]
