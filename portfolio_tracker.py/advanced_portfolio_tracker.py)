@@ -1,1 +1,173 @@
+import json
+import os
+
+MARKET_PRICES = {
+    "AAPL": 180,
+    "TSLA": 250,
+    "GOOGL": 140,
+    "AMZN": 175,
+    "MSFT": 400
+}
+
+DATA_FILE = "portfolio_data.json"
+
+
+def load_portfolio():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as file:
+            return json.load(file)
+    return []
+
+
+def save_portfolio(portfolio):
+
+    with open(DATA_FILE, "w") as file:
+        json.dump(portfolio, file, indent=4)
+
+
+def show_chart(portfolio):
+    
+    try:
+        import matplotlib.pyplot as plt
+
+        labels = [stock["stock"] for stock in portfolio]
+        values = [stock["current_value"] for stock in portfolio]
+
+        plt.figure(figsize=(7, 7))
+        plt.pie(values, labels=labels, autopct="%1.1f%%", startangle=140)
+        plt.title("Portfolio Allocation Breakdown")
+        plt.axis("equal")
+        plt.show()
+
+    except ImportError:
+        print("\nMatplotlib is not installed.")
+        print("Run the following command:")
+        print("pip install matplotlib")
+
+
+def run_tracker():
+    
+    print("=" * 45)
+    print("      ADVANCED STOCK PORTFOLIO TRACKER")
+    print("=" * 45)
+
+    portfolio = load_portfolio()
+
+    if portfolio:
+        print(f"\nLoaded {len(portfolio)} stock(s) from saved portfolio.")
+
+    print("\nCurrent Market Prices:")
+    for stock, price in MARKET_PRICES.items():
+        print(f"{stock} : ${price}")
+
+    print("-" * 50)
+
+    while True:
+        print("\nChoose an Option")
+        print("1. Add Stock")
+        print("2. View Portfolio Summary")
+        print("3. Show Portfolio Chart")
+        print("4. Exit")
+
+        choice = input("Enter your choice (1-4): ").strip()
+
+        if choice == "1":
+
+            stock_name = input("Enter Stock Symbol (Example: AAPL): ").strip().upper()
+
+            if stock_name not in MARKET_PRICES:
+                print("Stock symbol not found in the database.")
+                continue
+
+            try:
+                quantity = int(input("Enter Number of Shares: "))
+                buy_price = float(input("Enter Buying Price per Share ($): "))
+
+            except ValueError:
+                print("Invalid input! Please enter numeric values.")
+                continue
+
+            current_price = MARKET_PRICES[stock_name]
+
+            total_invested = quantity * buy_price
+            current_value = quantity * current_price
+            profit_loss = current_value - total_invested
+
+            portfolio.append({
+                "stock": stock_name,
+                "quantity": quantity,
+                "buy_price": buy_price,
+                "current_price": current_price,
+                "total_invested": total_invested,
+                "current_value": current_value,
+                "profit_loss": profit_loss
+            })
+
+            save_portfolio(portfolio)
+
+            print(f"\n{stock_name} added successfully!")
+
+        elif choice == "2":
+
+            if not portfolio:
+                print("\nYour portfolio is empty.")
+                continue
+
+            total_invested_all = 0
+            total_current_value_all = 0
+
+            print("\n" + "=" * 75)
+            print(f"{'Stock':<10}{'Qty':<8}{'Buy Price':<15}{'Current Price':<18}{'Profit/Loss':<15}")
+            print("=" * 75)
+
+            for stock in portfolio:
+
+                total_invested_all += stock["total_invested"]
+                total_current_value_all += stock["current_value"]
+
+                if stock["profit_loss"] >= 0:
+                    pl = f"+${stock['profit_loss']:.2f}"
+                else:
+                    pl = f"-${abs(stock['profit_loss']):.2f}"
+
+                print(
+                    f"{stock['stock']:<10}"
+                    f"{stock['quantity']:<8}"
+                    f"${stock['buy_price']:<14.2f}"
+                    f"${stock['current_price']:<17.2f}"
+                    f"{pl:<15}"
+                )
+
+            overall_profit = total_current_value_all - total_invested_all
+
+            print("-" * 75)
+            print(f"Total Investment : ${total_invested_all:.2f}")
+            print(f"Current Value    : ${total_current_value_all:.2f}")
+
+            if overall_profit >= 0:
+                print(f"Overall Profit   : +${overall_profit:.2f}")
+            else:
+                print(f"Overall Loss     : -${abs(overall_profit):.2f}")
+
+            print("=" * 75)
+
+        elif choice == "3":
+
+            if not portfolio:
+                print("\nPortfolio is empty. Add stocks first.")
+            else:
+                show_chart(portfolio)
+
+        elif choice == "4":
+
+            print("\nPortfolio saved successfully.")
+            print("Thank you for using the Stock Portfolio Tracker.")
+            break
+
+        else:
+            print("Invalid choice! Please select a number between 1 and 4.")
+
+
+if __name__ == "__main__":
+    run_tracker()
 
